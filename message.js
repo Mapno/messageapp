@@ -15,19 +15,23 @@ const appRedirect = axios.create({
 router.post("/", (req, res, next) => {
 
     let { destination, body } = req.body;
+
+    if (validator.validateString(destination) || validator.validateString(body)) {
+        console.log('a')
+        res.status(400).send('Error: input must be text');
+        return;
+    };
+
     const trimmed = trimmer(destination, body);
     destination = trimmed[0];
     body = trimmed[1];
 
-    if(validator.validateString(destination) || validator.validateString(body)) {
-        res.status(400).send('Error: input must be text');
+    if (validator.validateStringLength(destination) || validator.validateStringLength(body)) {
+        res.status(400).send('Error: input must be shorter than 100 characters');
         return;
     };
-    if(validator.validateStringLength(destination) || validator.validateStringLength(body)) {
-        res.status(400).send('Error: input must be shorter than 1000 characters');
-        return;
-    };
-    if(validator.validateBlankInput(destination) || validator.validateBlankInput(body)) {
+
+    if (validator.validateBlankInput(destination) || validator.validateBlankInput(body)) {
         res.status(400).send('Error: input cannot be left blank');
         return;
     };

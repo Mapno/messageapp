@@ -12,7 +12,7 @@ class Client {
     send(destination, message) {
         return this.service.post('/message', { destination, body: message })
             .then(response => response.data)
-            .catch(error => error)
+            .catch(error => error.response);
     };
 };
 
