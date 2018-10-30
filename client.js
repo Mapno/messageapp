@@ -6,12 +6,14 @@ class Client {
         this.port = port;
         this.service = axios.create({
             baseURL: `http://${this.hostname}:${this.port}`
-        })
-    }
+        });
+    };
 
     send(destination, message) {
-        this.service.post('/message', {destination, body: message})
-    }
-}
+        return this.service.post('/message', { destination, body: message })
+            .then(response => response.data)
+            .catch(error => error)
+    };
+};
 
 module.exports = Client;

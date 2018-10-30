@@ -1,4 +1,5 @@
 const Client = require('./client')
 const client = new Client('localhost', 9001)
 
-client.send('cabify','mario');
+client.send('cabify', 'mario')
+    .then(res => console.log(res))
