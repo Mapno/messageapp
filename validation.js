@@ -5,7 +5,11 @@ class Validate {
     };
 
     validateStringLength(text) {
-        return text.length < 100;
+        return text.length > 100;
+    };
+
+    validateBlankInput(text) {
+        return text.length < 1;
     };
 
 }

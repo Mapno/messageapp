@@ -19,12 +19,30 @@ app.use(bodyParser.json());
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
+function trimInputs(...inputs) {
+    inputs.forEach((text, index, arr) => arr[index] = text.trim());
+    return inputs
+};
+
 app.post("/message", (req, res, next) => {
 
-    const { destination, body } = req.body;
+    let { destination, body } = req.body;
+    const trimmed = trimInputs(destination, body);
+    destination = trimmed[0];
+    body = trimmed[1];
 
-    if(validator.validateString(destination) || validator.validateString(body)) res.status(400).send('Error: input must be text');
-    if(validator.validateStringLength(destination) || validator.validateStringLength(body)) res.status(400).send('Error: input must be shorter than 1000 characters');
+    if(validator.validateString(destination) || validator.validateString(body)) {
+        res.status(400).send('Error: input must be text');
+        return;
+    };
+    if(validator.validateStringLength(destination) || validator.validateStringLength(body)) {
+        res.status(400).send('Error: input must be shorter than 1000 characters');
+        return;
+    };
+    if(validator.validateBlankInput(destination) || validator.validateBlankInput(body)) {
+        res.status(400).send('Error: input cannot be left blank');
+        return;
+    };
 
     appRedirect.post("/message", { destination, body })
         .then(response => res.status(200).send(response.data))
