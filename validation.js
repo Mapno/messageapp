@@ -12,6 +12,8 @@ class Validate {
         return text.length < 1;
     };
 
+    
+
 }
 
 module.exports = Validate;
