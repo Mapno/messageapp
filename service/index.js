@@ -10,5 +10,5 @@ app.use(bodyParser.json());
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
-const messageRouter = require('./message');
+const messageRouter = require('./message/message');
 app.use('/message', messageRouter);

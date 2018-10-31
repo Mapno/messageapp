@@ -1,6 +1,6 @@
-const trimInputs = (...inputs) => {
+const trimmer = (...inputs) => {
     inputs.forEach((text, index, arr) => arr[index] = text.trim());
     return inputs
 };
 
-module.exports = trimInputs;
+module.exports = trimmer;
