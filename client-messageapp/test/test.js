@@ -23,7 +23,7 @@ describe("client", () => {
         });
         describe("port", () => {
             it("should have property port equal to second argument", () => {
-                const client = new Client("",port);
+                const client = new Client("", port);
                 assert.equal(client.port, port);
             });
         });
@@ -46,28 +46,54 @@ describe("client", () => {
                 });
             });
             describe("action", () => {
-                it("should return OK when message is sent", function(done) {
+
+                it("should return OK when message is sent", function (done) {
                     this.timeout(5000);
                     request(app)
                         .post('/message')
-                        .send({"destination":"test","body":"test"})
-                        .expect(200)
-                        .end((err, res) => {
-                            if (err) return done(err);
-                            done();
-                          });
+                        .send({ "destination": "test", "body": "test" })
+                        .expect(200, done)
+                        .expect(response => {
+                            assert.equal(response.res.text, 'OK')
+                        });
                 });
-                it("should return error when message is sent incorrectly", function(done) {
+
+                it("should return error when body is not string", function (done) {
                     this.timeout(5000);
                     request(app)
                         .post('/message')
-                        .send({"destination":"test","body":1})
-                        .expect(400)
-                        .end((err, res) => {
-                            if (err) return done(err);
-                            done();
-                          });
+                        .send({ "destination": "test", "body": 1 })
+                        .expect(400, done)
+                        .expect(response => assert.equal(response.res.text, 'instance.body is not of a type(s) string. '))
                 });
+
+                it("should return error when destination is not string", function (done) {
+                    this.timeout(5000);
+                    request(app)
+                        .post('/message')
+                        .send({ "destination": 1, "body": 'test' })
+                        .expect(400, done)
+                        .expect(response => assert.equal(response.res.text, 'instance.destination is not of a type(s) string. '))
+                });
+
+                it("should return error when destination & body are not string", function (done) {
+                    this.timeout(5000);
+                    request(app)
+                        .post('/message')
+                        .send({ "destination": 1, "body": 1 })
+                        .expect(400, done)
+                        .expect(response => assert.equal(response.res.text, 'instance.destination is not of a type(s) string. instance.body is not of a type(s) string. '))
+                });
+
+                it("should return error when destination & body are empty strings", function (done) {
+                    this.timeout(5000);
+                    request(app)
+                        .post('/message')
+                        .send({ "destination": "", "body": "" })
+                        .expect(400, done)
+                        .expect(response => assert.equal(response.res.text, 'instance.destination does not meet minimum length of 1. instance.body does not meet minimum length of 1. '))
+                });
+
             });
         });
     });
