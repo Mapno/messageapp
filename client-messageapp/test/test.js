@@ -57,6 +57,17 @@ describe("client", () => {
                             done();
                           });
                 });
+                it("should return error when message is sent incorrectly", function(done) {
+                    this.timeout(5000);
+                    request(app)
+                        .post('/message')
+                        .send({"destination":"test","body":1})
+                        .expect(400)
+                        .end((err, res) => {
+                            if (err) return done(err);
+                            done();
+                          });
+                });
             });
         });
     });
