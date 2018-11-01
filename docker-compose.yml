@@ -1,14 +1,25 @@
 version: '3'
 services:
-  # exercise1:
-  #   build: .
-  #   ports:
-  #     - "9001:9001"
-  #   environment:
-  #     - URL=messageapp
-  #     - SENDPORT=3000
-  #     - PORT=9001 
+  service:
+    build: ./service/.
+    ports:
+      - "9001:9001"
+    environment:
+      - URL=messageapp
+      - SENDPORT=3000
+      - PORT=9001
+    depends_on:
+      - "mongodb"
+    links:
+      - "mongodb"
   messageapp:
     image: "cabify/backend-bootcamp-messageapp:latest"
     ports:
       - "3000:3000"
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    volumes:
+      - ./data/db:/data/db
+    ports:
+      - 27017:27017
