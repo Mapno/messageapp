@@ -38,7 +38,7 @@ router.post("/", messageValidator, (req, res, next) => {
             const { amount, _id } = credit[0]
             if (amount >= messagePrice) {
                 const newAmount = amount - messagePrice;
-                Credit.findByIdAndUpdate(_id, { amount: newAmount }, {new: true})
+                Credit.findByIdAndUpdate(_id, { amount: newAmount }, { new: true })
                     .then(() => {
                         appRedirect.post("/message", { destination, body })
                             .then(response => {
@@ -56,9 +56,9 @@ router.post("/", messageValidator, (req, res, next) => {
                     })
             } else {
                 res.status(400).send('No credit left');
-            }
+            };
         })
-        .catch(err => console.log('Error fetching credit', err))
+        .catch(err => console.log('Error fetching credit', err));
 
 });
 
