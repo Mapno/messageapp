@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Message = require('../message/models/Message');
+const Message = require('../models/Message');
 
 let tries = 0;
 const saveMessage = (destination, body, wasSent = false, isConfirmed = false) => {

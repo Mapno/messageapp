@@ -13,7 +13,10 @@ app.use(bodyParser.json({ limit: '1mb' }));
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
-const messageRouter = require('./message/message');
+const messageRouter = require('./routes/message');
 app.use('/message', messageRouter);
+
+const creditRouter = require('./routes/credit');
+app.use('/credit', creditRouter);
 
 module.exports = app;
