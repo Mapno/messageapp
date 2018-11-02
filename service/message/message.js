@@ -1,11 +1,12 @@
 const router = require('express').Router();
-const trimmer = require('../src/functions');
+const trimmer = require('../utils/functions');
 const axios = require("axios");
-const Validator = require('jsonschema').Validator;
-const v = new Validator();
-const messageSchema = require('../validation/messageSchema');
+
 const DatabaseService = require('../database/DatabaseService');
-const db = new DatabaseService();
+const dbURL = 'mongodb://localhost:27017/messageapp'
+const db = new DatabaseService(dbURL);
+
+const jsonValidator = require('../utils/validationMiddleware');
 
 const hostname = process.env.URL || 'localhost';
 const sendPort = process.env.SENDPORT || 3000;
@@ -14,18 +15,11 @@ const appRedirect = axios.create({
     baseURL: `http://${hostname}:${sendPort}`
 });
 
-router.post("/", (req, res, next) => {
+db.connect();
+
+router.post("/", jsonValidator, (req, res, next) => {
     
     let { destination, body } = req.body;
-
-    const validation = v.validate(req.body, messageSchema);
-
-    if(validation.errors.length > 0) {
-        let errorMessage = '';
-        validation.errors.forEach(error => errorMessage += `${error.stack}. `);
-        res.status(400).send(errorMessage);
-        return;
-    }
 
     const trimmed = trimmer(destination, body);
     destination = trimmed[0];

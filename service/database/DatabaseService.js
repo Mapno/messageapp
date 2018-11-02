@@ -1,18 +1,28 @@
 const mongoose = require('mongoose');
-const message = require('../models/Message');
+const message = require('../message/models/Message');
 
 class Database {
-    constructor() {
-        this.connection = mongoose.connect('mongodb://localhost:27017/messageapp', {
-            useNewUrlParser: true
-        }).then(db => console.log(`Connected to mongodb. DB name: ${db}`))
-            .catch(err => console.log('Error connecting to mongodb', err))
+    constructor(dbURL) {
+        this.dbURL = dbURL;
+    };
 
-        this.save = (destination, body) => {
+    save(destination, body) {
             message.create({
                 destination,
                 body
             }).save()
         };
+
+    connect() {
+        return mongoose.connect(this.dbURL, { useNewUrlParser: true },(err) => {
+            if (err) {
+                console.error('Failed to connect to mongo - retrying in 5 sec', err);
+                setTimeout(connectWithRetry, 5000);
+            } else {
+                console.log(`Connected to mongodb. DB name: ${this.dbURL}`)
+            }
+        });
     };
 };
+
+module.exports = Database;
