@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const trimmer = require('../utils/functions');
 const axios = require("axios");
-const jsonValidator = require('../utils/validationMiddleware');
+const { messageValidator } = require('../utils/validationMiddleware');
 const Message = require('../models/Message');
 const Credit = require('../models/Credit');
 
@@ -16,7 +16,7 @@ const appRedirect = axios.create({
 
 const { saveMessage, findAllMessages } = require('../database/DatabaseService');
 
-router.post("/", jsonValidator, (req, res, next) => {
+router.post("/", messageValidator, (req, res, next) => {
 
     let { destination, body } = req.body;
 
