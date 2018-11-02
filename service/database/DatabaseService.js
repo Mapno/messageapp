@@ -1,13 +1,19 @@
 const mongoose = require('mongoose');
 const Message = require('../message/models/Message');
 
-const saveMessage = (destination, body) => {
+const saveMessage = (destination, body, wasSent = false, isConfirmed = false) => {
     return new Message({
         destination,
-        body
+        body,
+        wasSent,
+        isConfirmed
     }).save()
-        .then(msg => console.log(msg))
-        .catch(err => console.log('Error saving message in db', err))
+        .then(msg => msg)
+        .catch(err => {
+            console.log('Error saving message in db', err);
+            console.log('Retrying');
+            setTimeout(saveMessage, 1000);
+        })
 };
 
 const connect = (dbURL) => {
@@ -23,6 +29,10 @@ const connect = (dbURL) => {
 
 const findAllMessages = () => {
     return Message.find()
+}
+
+const updateMessageStatus = () => {
+    
 }
 
 module.exports = { saveMessage, connect, findAllMessages };
