@@ -25,6 +25,7 @@ router.post("/", jsonValidator, (req, res, next) => {
     let messageId;
     saveMessage(destination, body)
         .then(msg => messageId = msg._id)
+        .catch(err => console.log('Error'))
 
     appRedirect.post("/message", { destination, body })
         .then(response => {
