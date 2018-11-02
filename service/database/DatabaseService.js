@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const Message = require('../message/models/Message');
 
 const saveMessage = (destination, body) => {
-    console.log(destination,body)
     return new Message({
         destination,
         body
@@ -22,4 +21,8 @@ const connect = (dbURL) => {
     });
 };
 
-module.exports = { saveMessage, connect };
+const findAllMessages = () => {
+    return Message.find()
+}
+
+module.exports = { saveMessage, connect, findAllMessages };
