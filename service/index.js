@@ -5,8 +5,11 @@ const bodyParser = require("body-parser");
 
 const port = process.env.PORT || 9001;
 
-app.use(bodyParser.json({ limit: '1mb' }));
+const dbURL = 'mongodb://localhost:27017/messageapp';
+const { connect } = require('./database/DatabaseService');
+connect(dbURL);
 
+app.use(bodyParser.json({ limit: '1mb' }));
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
