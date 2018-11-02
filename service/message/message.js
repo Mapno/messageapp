@@ -4,6 +4,8 @@ const axios = require("axios");
 const Validator = require('jsonschema').Validator;
 const v = new Validator();
 const messageSchema = require('../validation/messageSchema');
+const DatabaseService = require('../database/DatabaseService');
+const db = new DatabaseService();
 
 const hostname = process.env.URL || 'localhost';
 const sendPort = process.env.SENDPORT || 3000;
@@ -30,7 +32,10 @@ router.post("/", (req, res, next) => {
     body = trimmed[1];
 
     appRedirect.post("/message", { destination, body })
-        .then(response => res.status(200).send(response.data))
+        .then(response => {
+            res.status(200).send(response.data)
+            // db.save()
+        })
         .catch(error => res.status(500).send(`${error}`));
 });
 
