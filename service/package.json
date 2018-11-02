@@ -23,6 +23,8 @@
     "express": "^4.16.4",
     "jsonschema": "^1.2.4",
     "mocha": "^5.2.0",
-    "mongoose": "^5.3.8"
+    "mongoose": "^5.3.8",
+    "redis": "^2.8.0",
+    "redis-lock": "^0.1.4"
   }
 }
