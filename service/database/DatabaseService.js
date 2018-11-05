@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Message = require('../models/Message');
+const Credit = require('../models/Credit');
 
 let tries = 0;
 const saveMessage = (destination, body, wasSent = false, isConfirmed = false) => {
@@ -12,7 +13,7 @@ const saveMessage = (destination, body, wasSent = false, isConfirmed = false) =>
         .then(msg => msg)
         .catch(err => {
             console.log('Error saving message in db', err);
-            if(tries < 2){
+            if (tries < 2) {
                 console.log(`Retrying. Try number ${tries + 1}`);
                 setTimeout(saveMessage, 1000);
                 tries++;
@@ -20,6 +21,16 @@ const saveMessage = (destination, body, wasSent = false, isConfirmed = false) =>
             }
         })
 };
+
+const updateEventState = (eventState) => {
+    return Credit.findOneAndUpdate({}, { "eventState": eventState }, { new: true })
+        .then(response => console.log(`Event state update to ${eventState}`))
+        .catch(err => {
+            console.log('Error trying to update the event state', err);
+            console.log('Retrying in 1sec');
+            setTimeout(updateEventState ,1000);
+        })
+}
 
 const connect = (dbURL) => {
     return mongoose.connect(dbURL, { useNewUrlParser: true }, (err) => {
@@ -37,7 +48,7 @@ const findAllMessages = () => {
 }
 
 const updateMessageStatus = () => {
-    
+
 }
 
-module.exports = { saveMessage, connect, findAllMessages };
+module.exports = { saveMessage, connect, findAllMessages, updateEventState };
