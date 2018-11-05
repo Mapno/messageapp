@@ -4,7 +4,8 @@ const axios = require("axios");
 const { messageValidator } = require('../utils/validationMiddleware');
 const Message = require('../models/Message');
 const Credit = require('../models/Credit');
-const { saveMessage, findAllMessages, updateEventState } = require('../database/DatabaseService');
+const { saveMessage, findAllMessages, updateEventState } = require('../clients/findAllMessages');
+const getMessages = require('../controllers/getMessages');
 
 const hostname = process.env.URL || 'localhost';
 const sendPort = process.env.SENDPORT || 3000;
@@ -19,11 +20,6 @@ router.post("/", messageValidator, (req, res, next) => {
 
 	let { destination, body } = req.body;
 
-	//removes spaces from both sides of the string
-	const trimmed = trimmer(destination, body);
-	destination = trimmed[0];
-	body = trimmed[1];
-
 	//saves message before operations
 	let messageId;
 	saveMessage(destination, body)
@@ -35,7 +31,6 @@ router.post("/", messageValidator, (req, res, next) => {
 				.then(credit => {
 					const { amount, _id } = credit[0];
 					let { eventState } = credit[0];
-					console.log(eventState)
 					if (eventState) {
 						eventState = false;
 						updateEventState(eventState)
@@ -47,13 +42,13 @@ router.post("/", messageValidator, (req, res, next) => {
 											appRedirect.post("/message", { destination, body })
 												.then(response => {
 													res.status(200).send(response.data);
-													Message.findOneAndUpdate({ _id }, { wasSent: true, isConfirmed: true }, { new: true })
+													Message.findOneAndUpdate({ _id: messageId }, { wasSent: true, isConfirmed: true }, { new: true })
 														.then(msg => console.log(`Message sent and confirmed. Credit left: ${newAmount}€`))
 														.catch(err => console.log('Error updating msg in db', err));
 												})
 												.catch(error => {
 													res.status(500).send(`${error}`);
-													Message.findOneAndUpdate({ _id }, { wasSent: true, isConfirmed: false }, { new: true })
+													Message.findOneAndUpdate({ _id: messageId }, { wasSent: true, isConfirmed: false }, { new: true })
 														.then(msg => console.log(`Message sent but not confirmed. Credit left: ${newAmount}€`))
 														.catch(err => console.log('Error updating msg in db', err));
 												});
@@ -73,9 +68,7 @@ router.post("/", messageValidator, (req, res, next) => {
 });
 
 router.get("/", (req, res, next) => {
-	findAllMessages()
-		.then(messages => res.status(200).send(messages))
-		.catch(err => console.log('Error fetching messages from db', err));
+	getMessages(req, res);
 });
 
 module.exports = router;

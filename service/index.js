@@ -7,7 +7,7 @@ const rateLimit = require('./utils/limiter');
 const port = process.env.PORT || 9001;
 
 const dbURL = 'mongodb://localhost:27017/messageapp';
-const { connect } = require('./database/DatabaseService');
+const { connect } = require('./database/databaseClient');
 connect(dbURL);
 
 app.use(rateLimit);

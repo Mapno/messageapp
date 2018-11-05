@@ -43,12 +43,4 @@ const connect = (dbURL) => {
     });
 };
 
-const findAllMessages = () => {
-    return Message.find()
-}
-
-const updateMessageStatus = () => {
-
-}
-
-module.exports = { saveMessage, connect, findAllMessages, updateEventState };
+module.exports = { saveMessage, connect, updateEventState };
