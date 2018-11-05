@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const creditSchema = new Schema({
-    amount: Number
+    amount: Number,
+    eventState: Boolean
 }, {
         timestamps: {
             createdAt: 'created_at',
