@@ -27,7 +27,7 @@ module.exports = (req, res, destination, body) => {
             }
         })
         .then(() => {
-            // lockCredit(false)
+            lockCredit(false)
         })
         .then(() => {
             sendMessage(destination, body)

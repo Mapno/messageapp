@@ -6,17 +6,17 @@ const rateLimit = require('./utils/limiter');
 
 const port = process.env.PORT || 9001;
 
-const { connect } = require('./database/databaseClient');
+const { connect, listenDB, databases } = require('./database/databaseClient');
 const dbURL1 = 'mongodb://localhost:27017/messageapp';
 const mongo1 = connect(dbURL1);
 const dbURL2 = 'mongodb://localhost:27018/messageapp';
 const mongo2 = connect(dbURL2);
 
-const cb = () => console.log('funciona')
+listenDB(mongo1, mongo2);
 
-mongo1.on(0, cb)
+// setInterval(() => console.log(databases), 5000)
 
-module.exports = { mongo1, mongo2 };
+module.exports = { databases };
 
 app.use(rateLimit);
 app.use(bodyParser.urlencoded({ limit: '1mb', extended: false }));
