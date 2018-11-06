@@ -1,5 +1,3 @@
-const Credit = require('../models/Credit');
-
-module.exports = (amount) => {
-    return Credit.findOneAndUpdate({}, { $inc: { "amount": amount } }, { new: true })
+module.exports = (amount, db) => {
+    return require('../models/Credit')(db).findOneAndUpdate({}, { $inc: { "amount": amount } }, { new: true })
 }

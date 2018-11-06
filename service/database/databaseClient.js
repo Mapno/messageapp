@@ -49,6 +49,12 @@ const listenConnect = (db) => {
     })
 };
 
+const listenReconnect = (db) => {
+    return db.on('reconnect', () => {
+        console.log('reconnecting')
+    })
+}
+
 const listenDisonnect = (db) => {
     return db.on('disconnected', () => {
         const port = db.port == 27017;
@@ -74,6 +80,7 @@ const listenDB = (mongo1, mongo2) => {
     listenConnect(mongo2)
     listenDisonnect(mongo1)
     listenDisonnect(mongo2)
+    listenReconnect(mongo1)
 }
 
 module.exports = { connect, listenDB, listenConnect, listenDisonnect, databases };

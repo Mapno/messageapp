@@ -14,7 +14,7 @@ const mongo2 = connect(dbURL2);
 
 listenDB(mongo1, mongo2);
 
-// setInterval(() => console.log(databases), 5000)
+// setInterval(() => console.log(databases.primary), 5000)
 
 module.exports = { databases };
 

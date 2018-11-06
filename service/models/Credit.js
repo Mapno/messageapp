@@ -11,4 +11,4 @@ const creditSchema = new Schema({
         }
     });
 
-module.exports = mongoose.model('CreditSchema', creditSchema);
+module.exports = (db) => db.model('CreditSchema', creditSchema);

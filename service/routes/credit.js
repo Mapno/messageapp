@@ -1,14 +1,17 @@
 const router = require('express').Router();
-const Credit = require('../models/Credit');
 const { creditValidator } = require('../utils/validationMiddleware');
 const addCredit = require('../controllers/addCredit')
+const { databases } = require('../index');
 
 router.post('/', creditValidator, (req, res, next) => {
     const { amount } = req.body;
-    addCredit(req, res, amount);
+    addCredit(req, res, amount, databases);
 });
 
+
 router.post('/new', (req, res, next) => {
+    const Credit = require('../models/Credit')(databases.db2.connection)
+    console.log(Credit)
     const { amount, eventState } = req.body;
     new Credit({
         amount,
