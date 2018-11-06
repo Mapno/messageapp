@@ -22,6 +22,13 @@ class Client {
             .then(response => response.data)
             .catch(error => error.response);
     };
+
+    updateCredit(amount) {
+        return this.service
+            .post('/credit', { amount })
+            .then(response => response.data)
+            .catch(error => error.response);
+    };
 };
 
 module.exports = Client;
