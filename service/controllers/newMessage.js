@@ -5,14 +5,10 @@ const findCredit = require('../clients/findCredit');
 const billMessage = require('../clients/billMessage');
 const lockCredit = require('../clients/lockCredit');
 const updateSecondaryCredit = require('../clients/updateSecondaryCredit');
+const billingRollback = require('../clients/billingRollback');
 
 const messagePrice = 0.5;
 let messageID = '';
-
-const billingRollback = (databases) => {
-    billMessage(-messagePrice, databases.db1.connection)
-        .then(() => updateSecondaryCredit(credit.amount, secondary))
-}
 
 module.exports = (req, res, destination, body, databases) => {
 
@@ -63,7 +59,7 @@ module.exports = (req, res, destination, body, databases) => {
                         .then(credit => {
                             return updateSecondaryCredit(credit.amount, secondary)
                                 .catch(err => console.log(err))
-                                .then(() => billingRollback(databases))
+                                .then(() => billingRollback(databases, messagePrice))
                         })
                         .then(credit => console.log(`Message sent and confirmed. Credit left: ${credit.amount}€`))
                         .catch(err => console.log('Error updating msg in db', err));
