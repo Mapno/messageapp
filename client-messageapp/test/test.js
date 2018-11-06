@@ -2,7 +2,7 @@ const assert = require("assert");
 const Client = require("../client");
 const request = require('supertest');
 
-const app = require('../../service/index');
+const { app } = require('../../service/index');
 
 describe("client", () => {
     const hostname = "localhost";

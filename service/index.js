@@ -10,7 +10,7 @@ const { listenDB, databases, mongo1, mongo2 } = require('./database/databaseClie
 
 listenDB(mongo1, mongo2);
 
-module.exports = { databases };
+module.exports = { databases, app };
 
 app.use(rateLimit);
 app.use(bodyParser.urlencoded({ limit: '1mb', extended: false }));
