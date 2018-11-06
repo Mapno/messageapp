@@ -1,6 +1,7 @@
-const Message = require('../models/Message');
+const saveMessage = (destination, body, db, wasSent = false, isConfirmed = false) => {
 
-const saveMessage = (destination, body, wasSent = false, isConfirmed = false) => {
+    const Message = require('../models/Message')(db);
+    
     let tries = 0;
 
     return new Message({

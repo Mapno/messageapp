@@ -1,9 +1,7 @@
-const Credit = require('../models/Credit');
-
-const billMessage = (cost) => {
+const billMessage = (cost, db) => {
     let tries = 0;
 
-    return Credit.findOneAndUpdate(
+    return require('../models/Credit')(db).findOneAndUpdate(
         {},
         { $inc: { amount: -cost }, eventState: true },
         { new: true }

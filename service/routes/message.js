@@ -5,10 +5,8 @@ const newMessage = require('../controllers/newMessage');
 const { databases } = require('../index');
 
 router.post("/", messageValidator, (req, res, next) => {
-
 	let { destination, body } = req.body;
-
-	newMessage(req, res, destination, body);
+	newMessage(req, res, destination, body, databases);
 });
 
 router.get("/", (req, res, next) => {

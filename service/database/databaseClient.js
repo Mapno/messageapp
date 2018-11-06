@@ -1,4 +1,8 @@
 const mongoose = require('mongoose');
+const updateSecondaryCredit = require('../clients/updateSecondaryCredit');
+const getCredit = require('../clients/getCredit');
+const dbURL1 = 'mongodb://localhost:27017/messageapp';
+const dbURL2 = 'mongodb://localhost:27018/messageapp';
 
 const databases = {
     db1: {
@@ -10,7 +14,7 @@ const databases = {
         status: false
     },
     primary: true
-}
+};
 
 const connect = (dbURL) => {
     return mongoose.createConnection(dbURL, { useNewUrlParser: true }, (err) => {
@@ -22,6 +26,9 @@ const connect = (dbURL) => {
         }
     });
 };
+
+let mongo1 = connect(dbURL1);
+let mongo2 = connect(dbURL2);
 
 const listenConnect = (db) => {
     return db.on('connected', () => {
@@ -51,9 +58,18 @@ const listenConnect = (db) => {
 
 const listenReconnect = (db) => {
     return db.on('reconnect', () => {
-        console.log('reconnecting')
-    })
-}
+        const port = db.port == 27017;
+
+        if (port) {
+            getCredit(databases.db2.connection)
+                .then(credit => updateSecondaryCredit(credit.amount, db));
+            
+        } else {
+            getCredit(databases.db1.connection)
+                .then(credit => updateSecondaryCredit(credit.amount, db));
+        }
+    });
+};
 
 const listenDisonnect = (db) => {
     return db.on('disconnected', () => {
@@ -76,11 +92,12 @@ const listenDisonnect = (db) => {
 }
 
 const listenDB = (mongo1, mongo2) => {
-    listenConnect(mongo1)
-    listenConnect(mongo2)
-    listenDisonnect(mongo1)
-    listenDisonnect(mongo2)
-    listenReconnect(mongo1)
+    listenConnect(mongo1);  
+    listenConnect(mongo2);
+    listenDisonnect(mongo1);
+    listenDisonnect(mongo2);
+    listenReconnect(mongo1);
+    listenReconnect(mongo2);
 }
 
-module.exports = { connect, listenDB, listenConnect, listenDisonnect, databases };
+module.exports = { connect, listenDB, listenConnect, listenDisonnect, databases, mongo1, mongo2 };
