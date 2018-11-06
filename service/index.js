@@ -6,9 +6,17 @@ const rateLimit = require('./utils/limiter');
 
 const port = process.env.PORT || 9001;
 
-const dbURL = 'mongodb://localhost:27017/messageapp';
 const { connect } = require('./database/databaseClient');
-connect(dbURL);
+const dbURL1 = 'mongodb://localhost:27017/messageapp';
+const mongo1 = connect(dbURL1);
+const dbURL2 = 'mongodb://localhost:27018/messageapp';
+const mongo2 = connect(dbURL2);
+
+const cb = () => console.log('funciona')
+
+mongo1.on(0, cb)
+
+module.exports = { mongo1, mongo2 };
 
 app.use(rateLimit);
 app.use(bodyParser.urlencoded({ limit: '1mb', extended: false }));
@@ -21,5 +29,3 @@ app.use('/message', messageRouter);
 
 const creditRouter = require('./routes/credit');
 app.use('/credit', creditRouter);
-
-module.exports = app;

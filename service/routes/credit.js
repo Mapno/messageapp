@@ -10,7 +10,11 @@ router.post('/', creditValidator, (req, res, next) => {
 
 router.post('/new', (req, res, next) => {
     const { amount, eventState } = req.body;
-    Credit.findOneAndUpdate({}, { "amount": amount, "eventState": eventState }, { new: true })
+    new Credit({
+        amount,
+        eventState
+    }).save()
+    // Credit.findOneAndUpdate({}, { "amount": amount, "eventState": eventState }, { new: true })
         .then(credit => res.status(200).json(credit))
         .catch(err => res.status(500).send('Error', err));
 });

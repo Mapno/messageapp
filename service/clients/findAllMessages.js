@@ -1,7 +1,5 @@
-const Message = require('../models/Message');
-
-const findAllMessages = () => {
-    return Message.find()
+const findAllMessages = (db) => {
+    return require('../models/Message')(db).find()
 }
 
 module.exports = findAllMessages;
